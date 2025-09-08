@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'src/routing/app_router.dart';
 import 'src/services/storage/hive_init.dart';
+import 'src/ui/common/splash_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +16,8 @@ class N3N3SehaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const backgroundColor = Color(0xFFddf4e7);
+
     return MaterialApp(
       title: 'N3N3 Seha',
       debugShowCheckedModeBanner: false,
@@ -22,11 +25,13 @@ class N3N3SehaApp extends StatelessWidget {
         useMaterial3: true,
         colorSchemeSeed: Colors.teal,
         brightness: Brightness.light,
+        scaffoldBackgroundColor: backgroundColor,
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: Colors.teal,
         brightness: Brightness.dark,
+        scaffoldBackgroundColor: backgroundColor,
       ),
       initialRoute: AppRoutes.splash,
       routes: AppRouter.routes,
@@ -60,7 +65,8 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const SplashPage(),
+      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
