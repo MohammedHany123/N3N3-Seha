@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('N3N3 Health - Login')),
+      appBar: AppBar(title: const Text('N3N3 Seha - Login')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(

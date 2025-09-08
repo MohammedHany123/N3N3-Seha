@@ -1,4 +1,4 @@
-package com.example.n3n3_health
+package com.example.n3n3_seha
 
 import io.flutter.embedding.android.FlutterActivity
 

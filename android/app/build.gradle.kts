@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.n3n3_health"
+    namespace = "com.example.n3n3_seha"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.n3n3_health"
+        applicationId = "com.example.n3n3_seha"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         // Require API 23+ for biometrics and modern camera APIs

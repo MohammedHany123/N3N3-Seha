@@ -7,16 +7,16 @@ import 'src/services/storage/hive_init.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeHiveStorage();
-  runApp(const ProviderScope(child: N3N3HealthApp()));
+  runApp(const ProviderScope(child: N3N3SehaApp()));
 }
 
-class N3N3HealthApp extends StatelessWidget {
-  const N3N3HealthApp({super.key});
+class N3N3SehaApp extends StatelessWidget {
+  const N3N3SehaApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'N3N3 Health',
+      title: 'N3N3 Seha',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
