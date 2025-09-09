@@ -33,7 +33,7 @@ class _SplashPageState extends State<SplashPage> {
       });
     }
     // TODO: Navigate to the next page after loading
-    // Navigator.pushReplacementNamed(context, '/home');
+    Navigator.pushReplacementNamed(context, '/welcome');
   }
 
   @override
