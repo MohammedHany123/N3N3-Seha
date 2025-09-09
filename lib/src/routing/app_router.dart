@@ -8,6 +8,7 @@ import '../ui/dashboard/admin/admin_dashboard_page.dart';
 import '../ui/dashboard/doctor/doctor_dashboard_page.dart';
 import '../ui/patient/patient_history_page.dart';
 import '../ui/auth/welcome_page.dart';
+import '../ui/dashboard/patient/patient_dashboard_page.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -16,6 +17,7 @@ class AppRoutes {
   static const String otp = '/otp';
   static const String doctorDashboard = '/doctorDashboard';
   static const String adminDashboard = '/adminDashboard';
+  static const String patientDashboard = '/patientDashboard';
   static const String patientHistory = '/patientHistory';
   static const String welcome = '/welcome';
 }
@@ -28,6 +30,7 @@ class AppRouter {
         AppRoutes.otp: (context) => const OtpPage(),
         AppRoutes.doctorDashboard: (context) => const DoctorDashboardPage(),
         AppRoutes.adminDashboard: (context) => const AdminDashboardPage(),
+        AppRoutes.patientDashboard: (context) => const PatientDashboardPage(),
         AppRoutes.patientHistory: (context) => const PatientHistoryPage(),
         AppRoutes.welcome: (context) => const WelcomePage(),
       };

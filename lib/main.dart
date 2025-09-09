@@ -5,10 +5,13 @@ import 'src/routing/app_router.dart';
 import 'src/services/storage/hive_init.dart';
 import 'src/ui/common/splash_page.dart';
 import 'src/ui/auth/welcome_page.dart';
+import 'src/services/storage/db_helper.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeHiveStorage();
+  //await initializeHiveStorage();
+  await DatabaseHelper.initDB();
+  await DatabaseHelper.insertDummyData();
   runApp(const ProviderScope(child: N3N3SehaApp()));
 }
 

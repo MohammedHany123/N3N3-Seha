@@ -48,6 +48,8 @@ dependencies:
   shared_preferences: ^2.5.3
   dio: ^5.9.0
   encrypt: ^5.0.3
+  sqflite: ^2.3.0
+  path: ^1.9.0
 
 dev_dependencies:
   flutter_test:
