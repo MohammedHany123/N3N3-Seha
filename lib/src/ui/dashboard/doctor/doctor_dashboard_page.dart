@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../common/top_box.dart';
 import '../../../routing/app_router.dart';
 import '../../../services/storage/db_helper.dart';
@@ -37,11 +38,7 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage> {
 
   void _onNavTap(int index) {
     setState(() => _selectedIndex = index);
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
+    _pageController.jumpToPage(index);
   }
 
   void _onPageChanged(int index) {
@@ -74,13 +71,12 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage> {
                     Navigator.pushReplacementNamed(context, '/welcome');
                   },
                   icon: const Icon(Icons.arrow_back, color: Color(0xFF09090b)),
-                  label: const Text(
+                  label: Text(
                     "Logout",
-                    style: TextStyle(
-                      fontFamily: 'Noto Sans',
-                      fontSize: 18, // adjusted as you asked before
+                    style: GoogleFonts.notoSans(
+                      fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFF09090b),
+                      color: const Color(0xFF09090b),
                     ),
                   ),
                 ),
@@ -125,7 +121,7 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage> {
             _buildNavItem("assets/bot_icon.jpeg", "AI", 1),
             _buildNavItem("assets/alerts_icon.jpeg", "Alerts", 2),
             _buildNavItem("assets/reports_icon.jpeg", "Reports", 3),
-            _buildNavItem("assets/patients_icon.jpeg", "Settings", 4),
+            _buildNavItem("assets/settings_icon.png", "Settings", 4),
           ],
         ),
       ),

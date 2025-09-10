@@ -9,6 +9,8 @@ import '../ui/dashboard/doctor/doctor_dashboard_page.dart';
 import '../ui/patient/patient_history_page.dart';
 import '../ui/auth/welcome_page.dart';
 import '../ui/dashboard/patient/patient_dashboard_page.dart';
+import '../ui/dashboard/doctor/dental_image_page.dart';
+
 
 class AppRoutes {
   static const String splash = '/';
@@ -20,6 +22,7 @@ class AppRoutes {
   static const String patientDashboard = '/patientDashboard';
   static const String patientHistory = '/patientHistory';
   static const String welcome = '/welcome';
+  static const String dentalImage = '/dentalImage';
 }
 
 class AppRouter {
@@ -36,6 +39,7 @@ class AppRouter {
         AppRoutes.patientDashboard: (context) => const PatientDashboardPage(),
         AppRoutes.patientHistory: (context) => const PatientHistoryPage(),
         AppRoutes.welcome: (context) => const WelcomePage(),
+        AppRoutes.dentalImage: (context) => const DentalImagePage(),
       };
 }
 

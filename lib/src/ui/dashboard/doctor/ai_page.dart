@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../doctor/dental_image_page.dart';
+import '../../../routing/app_router.dart';
+import '../../../ui/common/splash_page.dart';
+
 
 
 class AiPage extends StatelessWidget {
@@ -44,17 +48,17 @@ class AiPage extends StatelessWidget {
           const SizedBox(height: 40),
 
           // Action Buttons
-          _aiButton("Dental Image"),
+          _aiButton(context, "Dental Image", const DentalImagePage()),
           const SizedBox(height: 20),
-          _aiButton("CBC Analyzer"),
+          _aiButton(context, "CBC Analyzer", SplashPage()), // replace with CBCPage()
           const SizedBox(height: 20),
-          _aiButton("Document Scanning"),
+          _aiButton(context, "Document Scanning", SplashPage()), // replace with DocumentScanningPage()
         ],
       ),
     );
   }
 
-  Widget _aiButton(String text) {
+    Widget _aiButton(BuildContext context, String text, Widget targetPage) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -72,7 +76,10 @@ class AiPage extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          // TODO: add functionality
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => targetPage),
+          );
         },
         child: Text(
           text,

@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^6.2.1
+  image_picker: ^1.1.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -65,10 +66,7 @@ dev_dependencies:
 
 flutter_launcher_icons:
   android: true
-  ios: true
-  image_path: "assets/app_icon.jpeg"   # your icon
-  adaptive_icon_background: "#ddf4e7"      # or a background image
-  adaptive_icon_foreground: "#ddf4e7"
+  image_path: "assets/app_icon.png"   # your icon
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -93,6 +91,9 @@ flutter:
     - assets/bot_icon.jpeg
     - assets/alerts_icon.jpeg
     - assets/reports_icon.jpeg
+    - assets/settings_icon.png
+    - assets/camera_icon.png
+    - assets/folder_icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
