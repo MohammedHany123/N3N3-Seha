@@ -4,6 +4,7 @@ import '../../common/top_box.dart';
 import '../../../routing/app_router.dart';
 import '../../../services/storage/db_helper.dart';
 import '../doctor/ai_page.dart';
+import '../doctor/patients_page.dart';
 
 class DoctorDashboardPage extends StatefulWidget {
   final String doctorId;
@@ -99,7 +100,7 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage> {
               controller: _pageController,
               onPageChanged: _onPageChanged,
               children: [
-                Center(child: Text("Patients Page - TODO")),
+                PatientsPage(doctorId: widget.doctorId),
                 AiPage(doctorId: widget.doctorId),
                 Center(child: Text("Alerts Page - TODO")),
                 Center(child: Text("Reports Page - TODO")),
