@@ -17,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   Role _selectedRole = Role.doctor; // default selected
   final _idController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isLoginPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -226,17 +227,27 @@ class _LoginPageState extends State<LoginPage> {
         TextField(
           controller: _passwordController,
           style: const TextStyle(color: Colors.black),
+          obscureText: !_isLoginPasswordVisible,
           decoration: InputDecoration(
             labelText: 'Password',
-            labelStyle: const TextStyle(color: Colors.black54),
             filled: true,
             fillColor: Colors.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
             ),
+            suffixIcon: IconButton(
+              icon: Icon(
+                _isLoginPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                color: Colors.grey,
+              ),
+              onPressed: () {
+                setState(() {
+                  _isLoginPasswordVisible = !_isLoginPasswordVisible;
+                });
+              },
+            ),
           ),
-          obscureText: true,
         ),
       ],
     );

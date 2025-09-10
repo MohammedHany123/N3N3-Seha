@@ -10,7 +10,7 @@ import '../ui/patient/patient_history_page.dart';
 import '../ui/auth/welcome_page.dart';
 import '../ui/dashboard/patient/patient_dashboard_page.dart';
 import '../ui/dashboard/doctor/dental_image_page.dart';
-
+import '../ui/dashboard/doctor/cbc_analyzer_page.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -23,6 +23,7 @@ class AppRoutes {
   static const String patientHistory = '/patientHistory';
   static const String welcome = '/welcome';
   static const String dentalImage = '/dentalImage';
+  static const String cbcAnalyzer = '/cbcAnaylzer';
 }
 
 class AppRouter {
@@ -39,7 +40,14 @@ class AppRouter {
         AppRoutes.patientDashboard: (context) => const PatientDashboardPage(),
         AppRoutes.patientHistory: (context) => const PatientHistoryPage(),
         AppRoutes.welcome: (context) => const WelcomePage(),
-        AppRoutes.dentalImage: (context) => const DentalImagePage(),
+        AppRoutes.dentalImage: (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as String;
+          return DentalImagePage(doctorId: args);
+        },
+        AppRoutes.cbcAnalyzer: (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as String;
+          return CbcAnalyzerPage(doctorId: args);
+        },
       };
 }
 

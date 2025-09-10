@@ -6,7 +6,9 @@ import '../../common/top_box.dart';
 import 'doctor_dashboard_page.dart';
 
 class DentalImagePage extends StatefulWidget {
-  const DentalImagePage({super.key});
+  final String doctorId;   // receive doctorId
+
+  const DentalImagePage({super.key, required this.doctorId});
 
   @override
   State<DentalImagePage> createState() => _DentalImagePageState();
@@ -49,8 +51,8 @@ class _DentalImagePageState extends State<DentalImagePage> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const DoctorDashboardPage(
-                        doctorId: "DUMMY_ID", // replace with actual doctor ID
+                      builder: (_) => DoctorDashboardPage(
+                        doctorId: widget.doctorId, // replace with actual doctor ID
                       ),
                     ),
                   );

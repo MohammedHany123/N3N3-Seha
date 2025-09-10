@@ -19,6 +19,8 @@ class _RegisterDoctorPageState extends State<RegisterDoctorPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   @override
   void dispose() {
@@ -108,17 +110,54 @@ class _RegisterDoctorPageState extends State<RegisterDoctorPage> {
             TextField(
               controller: _passwordController,
               style: const TextStyle(color: Colors.black),
-              decoration: _inputDecoration('Password'),
-              obscureText: true,
+              obscureText: !_isPasswordVisible, // <-- use toggle
+              decoration: InputDecoration(
+                labelText: 'Password',
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                ),
+              ),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _confirmPasswordController,
               style: const TextStyle(color: Colors.black),
-              decoration: _inputDecoration('Confirm Password'),
-              obscureText: true,
+              obscureText: !_isConfirmPasswordVisible,
+              decoration: InputDecoration(
+                labelText: 'Confirm Password',
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                    });
+                  },
+                ),
+              ),
             ),
-
             const SizedBox(height: 40),
 
             // Buttons side by side

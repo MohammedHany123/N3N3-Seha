@@ -100,7 +100,7 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage> {
               onPageChanged: _onPageChanged,
               children: [
                 Center(child: Text("Patients Page - TODO")),
-                AiPage(),
+                AiPage(doctorId: widget.doctorId),
                 Center(child: Text("Alerts Page - TODO")),
                 Center(child: Text("Reports Page - TODO")),
                 Center(child: Text("Settings Page - TODO")),
