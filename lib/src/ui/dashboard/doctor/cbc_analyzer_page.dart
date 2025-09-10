@@ -182,6 +182,18 @@ class _CbcAnalyzerPageState extends State<CbcAnalyzerPage> {
 
             const SizedBox(height: 20),
 
+            // Page title
+            Center(
+              child: Text(
+                "CBC Analyzer",
+                style: GoogleFonts.roboto(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF26667f),
+                ),
+              ),
+            ),
+
             // Camera and Gallery buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

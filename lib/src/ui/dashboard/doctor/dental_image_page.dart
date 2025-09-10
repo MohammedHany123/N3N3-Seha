@@ -71,6 +71,18 @@ class _DentalImagePageState extends State<DentalImagePage> {
 
             const SizedBox(height: 20),
 
+            // Page title
+            Center(
+              child: Text(
+                "Dental Image",
+                style: GoogleFonts.roboto(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF26667f),
+                ),
+              ),
+            ),
+
             // Circular buttons row
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../doctor/dental_image_page.dart';
 import '../doctor/cbc_analyzer_page.dart';
+import '../doctor/doc_scan_page.dart';
 import '../../../routing/app_router.dart';
-import '../../../ui/common/splash_page.dart';
 
 
 
@@ -53,9 +53,9 @@ class AiPage extends StatelessWidget {
           // Action Buttons
           _aiButton(context, "Dental Image", DentalImagePage(doctorId: doctorId)),
           const SizedBox(height: 20),
-          _aiButton(context, "CBC Analyzer", CbcAnalyzerPage(doctorId: doctorId)), // replace with CBCPage()
+          _aiButton(context, "CBC Analyzer", CbcAnalyzerPage(doctorId: doctorId)),
           const SizedBox(height: 20),
-          _aiButton(context, "Document Scanning", SplashPage()), // replace with DocumentScanningPage()
+          _aiButton(context, "Document Scanning", DocScanPage(doctorId: doctorId)),
         ],
       ),
     );

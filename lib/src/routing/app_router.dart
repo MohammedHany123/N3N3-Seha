@@ -24,6 +24,7 @@ class AppRoutes {
   static const String welcome = '/welcome';
   static const String dentalImage = '/dentalImage';
   static const String cbcAnalyzer = '/cbcAnaylzer';
+  static const String docScan = '/docScan';
 }
 
 class AppRouter {
@@ -45,6 +46,10 @@ class AppRouter {
           return DentalImagePage(doctorId: args);
         },
         AppRoutes.cbcAnalyzer: (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as String;
+          return CbcAnalyzerPage(doctorId: args);
+        },
+        AppRoutes.docScan: (context) {
           final args = ModalRoute.of(context)!.settings.arguments as String;
           return CbcAnalyzerPage(doctorId: args);
         },
