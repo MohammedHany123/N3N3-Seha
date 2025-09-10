@@ -176,4 +176,20 @@ class DatabaseHelper {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
+
+  static Future<Map<String, dynamic>?> getDoctorById(String syndicateId) async {
+      final db = await database;
+      print("Running query for doctorId: $syndicateId");
+
+      final res = await db.query(
+        'Doctors',
+        where: 'syndicate_id = ?',
+        whereArgs: [syndicateId],
+      );
+
+      print("Query result: $res"); // <---- Important
+      return res.isNotEmpty ? res.first : null;
+    }
+
+
 }

@@ -28,7 +28,10 @@ class AppRouter {
         AppRoutes.login: (context) => const LoginPage(),
         AppRoutes.registerDoctor: (context) => const RegisterDoctorPage(),
         AppRoutes.otp: (context) => const OtpPage(),
-        AppRoutes.doctorDashboard: (context) => const DoctorDashboardPage(),
+        AppRoutes.doctorDashboard: (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as String;
+          return DoctorDashboardPage(doctorId: args);
+        },
         AppRoutes.adminDashboard: (context) => const AdminDashboardPage(),
         AppRoutes.patientDashboard: (context) => const PatientDashboardPage(),
         AppRoutes.patientHistory: (context) => const PatientHistoryPage(),

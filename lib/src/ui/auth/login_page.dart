@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../routing/app_router.dart';
 import '../common/top_box.dart';
 import '../../services/storage/db_helper.dart';
+import '../dashboard/doctor/doctor_dashboard_page.dart';
 
 enum Role { doctor, patient, admin }
 
@@ -244,7 +245,12 @@ class _LoginPageState extends State<LoginPage> {
   void _navigateToDashboard(BuildContext context) {
     switch (_selectedRole) {
       case Role.doctor:
-        Navigator.pushReplacementNamed(context, AppRoutes.doctorDashboard);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => DoctorDashboardPage(doctorId: _idController.text.trim()),
+          ),
+        );
         break;
       case Role.patient:
         Navigator.pushReplacementNamed(context, AppRoutes.patientDashboard);
