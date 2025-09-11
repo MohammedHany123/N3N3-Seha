@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../common/top_box.dart';
 import 'doctor_dashboard_page.dart';
+import '../../common/select_patient_dialog.dart';
 
 class DentalImagePage extends StatefulWidget {
   final String doctorId;   // receive doctorId
@@ -136,9 +137,24 @@ class _DentalImagePageState extends State<DentalImagePage> {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: _actionButton("Save to Patient", () {
-                      // TODO: save logic
-                    }),
+                    child: _actionButton(
+                      "Save to Patient",
+                      () async {
+                        await showDialog(
+                          context: context,
+                          builder: (_) => SelectPatientDialog(
+                            doctorId: widget.doctorId,
+                            aiResult: "AI Results Placeholder:\n- No tooth detected → please retry\n- Or show detected conditions with confidence + heatmap",
+                            diagnosticType: "Dental Image",
+                            onPatientSelected: (patient) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Diagnosis saved successfully!")),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),

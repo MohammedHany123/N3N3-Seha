@@ -8,7 +8,15 @@ import 'patient_details_page.dart';
 
 class PatientsPage extends StatefulWidget {
   final String doctorId;
-  const PatientsPage({super.key, required this.doctorId});
+  final String? aiResult;
+  final String? diagnosticType;
+
+  const PatientsPage({
+    super.key,
+    required this.doctorId,
+    this.aiResult,
+    this.diagnosticType,
+  });
 
   @override
   State<PatientsPage> createState() => _PatientsPageState();
@@ -170,16 +178,40 @@ class _PatientsPageState extends State<PatientsPage> {
       ),
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => PatientDetailsPage(
-                doctorId: widget.doctorId,
-                patientId: patient['national_id'],
+        onTap: () async {
+          if (widget.aiResult != null && widget.diagnosticType != null) {
+            await DatabaseHelper.addDiagnostic(
+              patientId: patient['national_id'],
+              doctorId: widget.doctorId,
+              aiResult: widget.aiResult!,
+              doctorNotes: "",
+              diagnosticType: widget.diagnosticType!,
+            );
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("AI Diagnosis saved successfully!")),
+            );
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => PatientDetailsPage(
+                  doctorId: widget.doctorId,
+                  patientId: patient['national_id'],
+                ),
               ),
-            ),
-          );
+            );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => PatientDetailsPage(
+                  doctorId: widget.doctorId,
+                  patientId: patient['national_id'],
+                ),
+              ),
+            );
+          }
         },
         leading: CircleAvatar(
           backgroundColor: const Color(0xFF26667f),

@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import '../../common/top_box.dart';
 import 'doctor_dashboard_page.dart';
+import '../../common/select_patient_dialog.dart';
 
 class CbcAnalyzerPage extends StatefulWidget {
   final String doctorId;   // receive doctorId
@@ -194,6 +195,16 @@ class _CbcAnalyzerPageState extends State<CbcAnalyzerPage> {
     return values;
   }
 
+  String _generateCBCResultSummary() {
+    final buffer = StringBuffer("CBC Results:\n");
+    _controllers.forEach((param, controller) {
+      if (controller.text.trim().isNotEmpty) {
+        buffer.writeln("$param: ${controller.text.trim()}");
+      }
+    });
+    print(buffer.toString());
+    return buffer.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -380,9 +391,24 @@ class _CbcAnalyzerPageState extends State<CbcAnalyzerPage> {
                             ),
                             const SizedBox(width: 10),
                             Expanded(
-                              child: _actionButton("Save to Patient", () {
-                                // TODO: save logic
-                              }),
+                              child: _actionButton(
+                                "Save to Patient",
+                                () async {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (_) => SelectPatientDialog(
+                                      doctorId: widget.doctorId,
+                                      aiResult: _generateCBCResultSummary(),
+                                      diagnosticType: "CBC Analyzer",
+                                      onPatientSelected: (patient) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(content: Text("Document saved successfully!")),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ],
                         ),

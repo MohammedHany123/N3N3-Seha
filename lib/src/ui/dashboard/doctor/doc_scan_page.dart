@@ -5,6 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import '../../common/top_box.dart';
 import 'doctor_dashboard_page.dart';
+import '../../common/select_patient_dialog.dart';
+
 
 class DocScanPage extends StatefulWidget {
   final String doctorId;
@@ -302,7 +304,24 @@ class _DocScanPageState extends State<DocScanPage> {
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: _actionButton("Save to Patient", _saveDocument),
+                    child: _actionButton(
+                      "Save to Patient",
+                      () async {
+                        await showDialog(
+                          context: context,
+                          builder: (_) => SelectPatientDialog(
+                            doctorId: widget.doctorId,
+                            aiResult: _extractedText,
+                            diagnosticType: "Document Scan",
+                            onPatientSelected: (patient) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Document saved successfully!")),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
