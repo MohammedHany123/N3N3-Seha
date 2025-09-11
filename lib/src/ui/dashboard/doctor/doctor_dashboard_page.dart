@@ -5,6 +5,10 @@ import '../../../routing/app_router.dart';
 import '../../../services/storage/db_helper.dart';
 import '../doctor/ai_page.dart';
 import '../doctor/patients_page.dart';
+import '../doctor/doctors_settings_page.dart';
+import '../doctor/alerts_page.dart';
+import '../doctor/reports_page.dart';
+
 
 class DoctorDashboardPage extends StatefulWidget {
   final String doctorId;
@@ -19,6 +23,10 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage> {
   int _selectedIndex = 1; // AI page default index
   late PageController _pageController;
   String _firstName = "";
+  String _lastName = "";
+  String _email = "";
+  String _phone = "";
+
 
   @override
   void initState() {
@@ -33,6 +41,9 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage> {
     print("Doctor record fetched: $doctor");
     setState(() {
       _firstName = doctor?['first_name'] ?? "Doctor";
+      _lastName = doctor?['last_name'] ?? "";
+      _email = doctor?['email'] ?? "";
+      _phone = doctor?['phone'] ?? "";
       print("Doctor first name set to: $_firstName");
     });
   }
@@ -102,9 +113,15 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage> {
               children: [
                 PatientsPage(doctorId: widget.doctorId),
                 AiPage(doctorId: widget.doctorId),
-                Center(child: Text("Alerts Page - TODO")),
-                Center(child: Text("Reports Page - TODO")),
-                Center(child: Text("Settings Page - TODO")),
+                AlertsPage(doctorId: widget.doctorId),
+                ReportsPage(doctorId: widget.doctorId),
+                DoctorSettingsPage(
+                  doctorId: widget.doctorId,
+                  fname: _firstName,
+                  lname: _lastName,
+                  email: _email,
+                  phone: _phone,
+                ),
               ],
             ),
           ),

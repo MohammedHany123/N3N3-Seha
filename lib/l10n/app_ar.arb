@@ -1,0 +1,16 @@
+{
+  "@@locale": "ar",
+  "appTitle": "نعنع صحة",
+  "helloDoctor": "مرحباً د. {firstName}",
+  "logout": "تسجيل الخروج",
+  "patients": "المرضى",
+  "ai": "الذكاء الاصطناعي",
+  "alerts": "التنبيهات",
+  "reports": "التقارير",
+  "settings": "الإعدادات",
+  "language": "اللغة",
+  "darkTheme": "الوضع الداكن",
+  "notifications": "تفعيل الإشعارات",
+  "changePassword": "تغيير كلمة المرور",
+  "logoutAction": "تسجيل الخروج"
+}

@@ -1,0 +1,16 @@
+{
+  "@@locale": "en",
+  "appTitle": "N3N3 Seha",
+  "helloDoctor": "Hello, Dr. {firstName}",
+  "logout": "Logout",
+  "patients": "Patients",
+  "ai": "AI",
+  "alerts": "Alerts",
+  "reports": "Reports",
+  "settings": "Settings",
+  "language": "Language",
+  "darkTheme": "Dark Theme",
+  "notifications": "Enable Notifications",
+  "changePassword": "Change Password",
+  "logoutAction": "Logout"
+}

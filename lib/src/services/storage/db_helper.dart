@@ -39,7 +39,8 @@ class DatabaseHelper {
             last_name TEXT,
             password TEXT,
             phone TEXT,
-            email TEXT
+            email TEXT,
+            profile_image TEXT NULL
           )
         ''');
 
@@ -112,6 +113,20 @@ class DatabaseHelper {
             created_at TEXT,
             FOREIGN KEY (patient_id) REFERENCES Patients(national_id),
             FOREIGN KEY (doctor_id) REFERENCES Doctors(syndicate_id)
+          )
+        ''');
+
+        await db.execute('''
+          CREATE TABLE Alerts(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            doctor_id TEXT,
+            patient_id TEXT,
+            title TEXT,
+            description TEXT,
+            datetime TEXT,
+            status TEXT, -- 'unread' or 'read'
+            FOREIGN KEY (doctor_id) REFERENCES Doctors(syndicate_id),
+            FOREIGN KEY (patient_id) REFERENCES Patients(national_id)
           )
         ''');
       },
@@ -238,6 +253,23 @@ class DatabaseHelper {
       'treatment': 'Blood tests advised',
       'medications': 'Iron supplements',
       'notes': 'Monitor for 1 month',
+    });
+
+    await db.insert('Alerts', {
+      'doctor_id': 'D5678',
+      'patient_id': '12345678901234',
+      'title': 'Abnormal CBC Detected',
+      'description': 'CBC result for Ali Hassan shows low hemoglobin.',
+      'datetime': DateTime.now().subtract(const Duration(hours: 2)).toIso8601String(),
+      'status': 'unread',
+    });
+    await db.insert('Alerts', {
+      'doctor_id': 'D5678',
+      'patient_id': '98765432109876',
+      'title': 'Urgent Dental Case',
+      'description': 'Sara Mostafa reported severe tooth pain.',
+      'datetime': DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+      'status': 'read',
     });
   }
 
@@ -482,6 +514,126 @@ class DatabaseHelper {
     );
   }
 
+  static Future<void> updateDoctorProfile(
+      String doctorId, {
+      required String name,
+      required String email,
+      required String phone,
+    }) async {
+    final db = await database;
+    final parts = name.split(' ');
+    final firstName = parts.first;
+    final lastName = parts.length > 1 ? parts.sublist(1).join(' ') : '';
+    await db.update(
+      'Doctors',
+      {
+        'first_name': firstName,
+        'last_name': lastName,
+        'email': email,
+        'phone': phone,
+      },
+      where: 'syndicate_id = ?',
+      whereArgs: [doctorId],
+    );
+  }
 
+  static Future<void> updateDoctorPassword(String doctorId, String newPassword) async {
+    final db = await database;
+    await db.update(
+      'Doctors',
+      {'password': newPassword},
+      where: 'syndicate_id = ?',
+      whereArgs: [doctorId],
+    );
+  }
+
+  static Future<void> updateDoctorProfileImage(String doctorId, String imagePath) async {
+    final db = await database;
+    await db.update(
+      'Doctors',
+      {'profile_image': imagePath},
+      where: 'syndicate_id = ?',
+      whereArgs: [doctorId],
+    );
+  }
+
+  // Insert a new alert
+  static Future<void> insertAlert({
+    required String doctorId,
+    required String patientId,
+    required String title,
+    required String description,
+    String status = 'unread',
+    DateTime? dateTime,
+  }) async {
+    final db = await database;
+    await db.insert(
+      'Alerts',
+      {
+        'doctor_id': doctorId,
+        'patient_id': patientId,
+        'title': title,
+        'description': description,
+        'datetime': (dateTime ?? DateTime.now()).toIso8601String(),
+        'status': status,
+      },
+    );
+  }
+  
+  // Fetch all alerts for a doctor, newest first
+  static Future<List<Map<String, dynamic>>> getDoctorAlerts(String doctorId) async {
+    final db = await database;
+    return await db.query(
+      'Alerts',
+      where: 'doctor_id = ?',
+      whereArgs: [doctorId],
+      orderBy: 'datetime DESC',
+    );
+  }
+  
+  // Mark alert as read
+  static Future<void> markAlertAsRead(int alertId) async {
+    final db = await database;
+    await db.update(
+      'Alerts',
+      {'status': 'read'},
+      where: 'id = ?',
+      whereArgs: [alertId],
+    );
+  }
+  
+  // Mark alert as unread
+  static Future<void> markAlertAsUnread(int alertId) async {
+    final db = await database;
+    await db.update(
+      'Alerts',
+      {'status': 'unread'},
+      where: 'id = ?',
+      whereArgs: [alertId],
+    );
+  }
+  
+  // Delete alert
+  static Future<void> deleteAlert(int alertId) async {
+    final db = await database;
+    await db.delete(
+      'Alerts',
+      where: 'id = ?',
+      whereArgs: [alertId],
+    );
+  }
+
+  // Fetch all reports for a doctor with patient details
+  static Future<List<Map<String, dynamic>>> getDoctorReports(String doctorId) async {
+  final db = await database;
+  return await db.rawQuery('''
+    SELECT Diagnostics.diagnostic_id, Diagnostics.patient_id, Diagnostics.diagnostic_type, Diagnostics.ai_result, Diagnostics.created_at,
+           Patients.first_name, Patients.last_name, Patients.national_id
+    FROM Diagnostics
+    JOIN Patients ON Diagnostics.patient_id = Patients.national_id
+    WHERE Diagnostics.doctor_id = ?
+    ORDER BY Diagnostics.created_at DESC
+  ''', [doctorId]);
+}
 
 }
