@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import '../../common/top_box.dart';
 import 'doctor_dashboard_page.dart';
 
@@ -39,57 +40,40 @@ class _DocScanPageState extends State<DocScanPage> {
       _isProcessingImage = true;
     });
 
-    // Simulate text extraction from image
-    await Future.delayed(const Duration(seconds: 3));
-    
-    // Mock extracted text - in real app, use OCR library like google_mlkit_text_recognition
-    final mockExtractedText = """
-PATIENT INFORMATION
-Name: John Doe
-Date of Birth: 15/03/1985
-Patient ID: P123456
-Date: 15/12/2024
+    try {
+      // Create InputImage from file
+      final inputImage = InputImage.fromFilePath(_selectedImage!.path);
 
-MEDICAL REPORT
-Chief Complaint: Chest pain and shortness of breath
-History: Patient presents with acute onset chest pain radiating to left arm, associated with nausea and diaphoresis.
+      // Initialize recognizer (English / Latin script by default)
+      final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
 
-PHYSICAL EXAMINATION
-Vital Signs:
-- Blood Pressure: 140/90 mmHg
-- Heart Rate: 95 bpm
-- Temperature: 98.6°F
-- Respiratory Rate: 22/min
+      // Process image
+      final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
 
-Cardiovascular: Regular rate and rhythm, no murmurs
-Respiratory: Clear to auscultation bilaterally
-Abdomen: Soft, non-tender, no organomegaly
+      await textRecognizer.close();
 
-ASSESSMENT AND PLAN
-1. Chest pain - rule out acute coronary syndrome
-   - Order EKG, cardiac enzymes
-   - Consider stress test if stable
-   
-2. Hypertension
-   - Continue current antihypertensive
-   - Monitor blood pressure closely
-   
-3. Follow-up in 1 week
+      setState(() {
+        _extractedText = recognizedText.text;
+        _textExtracted = true;
+      });
 
-Dr. Smith
-Cardiologist
-License: MD12345
-""";
-
-    setState(() {
-      _extractedText = mockExtractedText;
-      _textExtracted = true;
-      _isProcessingImage = false;
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Text extracted successfully!')),
-    );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Text extracted successfully!')),
+      );
+    } catch (e) {
+      setState(() {
+        _extractedText = "Error extracting text: $e";
+        _textExtracted = true;
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error extracting text: $e')),
+      );
+    } finally {
+      setState(() {
+        _isProcessingImage = false;
+      });
+    }
   }
 
   void _discardDocument() {

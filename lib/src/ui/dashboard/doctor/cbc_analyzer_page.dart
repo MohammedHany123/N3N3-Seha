@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import '../../common/top_box.dart';
 import 'doctor_dashboard_page.dart';
 
@@ -30,6 +31,8 @@ class _CbcAnalyzerPageState extends State<CbcAnalyzerPage> {
     "MCHC": TextEditingController(),
     "RDW": TextEditingController(),
     "MPV": TextEditingController(),
+    "PDW": TextEditingController(),
+    "PCT": TextEditingController(),
   };
 
   bool _resultsVisible = false;
@@ -48,6 +51,8 @@ class _CbcAnalyzerPageState extends State<CbcAnalyzerPage> {
     "MCHC": {"min": 32.0, "max": 36.0}, // g/dL
     "RDW": {"min": 11.5, "max": 14.5}, // %
     "MPV": {"min": 7.5, "max": 12.5}, // fL
+    "PDW": {"min": 8.0, "max": 18.0}, // fL
+    "PCT": {"min": 0.1, "max": 0.4}, // %
   };
 
   final Map<String, String> _lowInterpretations = const {
@@ -61,6 +66,8 @@ class _CbcAnalyzerPageState extends State<CbcAnalyzerPage> {
     "MCHC": "Low MCHC suggests hypochromia; correlate with iron studies.",
     "RDW": "Low RDW is usually not clinically significant.",
     "MPV": "Low MPV may indicate smaller platelets; correlate clinically.",
+    "PDW": "Low PDW may indicate uniform platelet size; correlate clinically.",
+    "PCT": "Low PCT may indicate thrombocytopenia; correlate with platelet count.",
   };
 
   final Map<String, String> _highInterpretations = const {
@@ -74,6 +81,8 @@ class _CbcAnalyzerPageState extends State<CbcAnalyzerPage> {
     "MCHC": "High MCHC can be seen in spherocytosis or lab artifact.",
     "RDW": "High RDW suggests anisocytosis; mixed deficiencies or recent transfusion.",
     "MPV": "High MPV may indicate larger platelets; increased turnover.",
+    "PDW": "High PDW may indicate platelet size variation; correlate clinically.",
+    "PCT": "High PCT may indicate thrombocytosis; correlate with platelet count.",
   };
 
   double? _parseValue(String? text) {
@@ -107,38 +116,84 @@ class _CbcAnalyzerPageState extends State<CbcAnalyzerPage> {
       _isProcessingImage = true;
     });
 
-    // Simulate text extraction from image
-    await Future.delayed(const Duration(seconds: 2));
-    
-    // Mock extracted values - in real app, use OCR library like google_mlkit_text_recognition
-    final mockExtractedValues = {
-      "WBC": "7.2",
-      "RBC": "4.5",
-      "HGB": "14.2",
-      "PLT": "250",
-      "HCT": "42.1",
-      "MCV": "88.5",
-      "MCH": "28.3",
-      "MCHC": "32.1",
-      "RDW": "12.8",
-      "MPV": "9.2",
-    };
+    try {
+      // Create InputImage from file
+      final inputImage = InputImage.fromFilePath(_selectedImage!.path);
 
-    // Auto-fill the form with extracted values
-    for (var entry in mockExtractedValues.entries) {
-      if (_controllers.containsKey(entry.key)) {
-        _controllers[entry.key]!.text = entry.value;
+      // Initialize recognizer (English / Latin script by default)
+      final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+
+      // Process image
+      final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+
+      await textRecognizer.close();
+
+      // Parse the extracted text for CBC values
+      final extractedText = recognizedText.text;
+      final extractedValues = _parseCBCValues(extractedText);
+
+      // Auto-fill the form with extracted values
+      for (var entry in extractedValues.entries) {
+        if (_controllers.containsKey(entry.key)) {
+          _controllers[entry.key]!.text = entry.value;
+        }
       }
+
+      setState(() {
+        _isProcessingImage = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Document processed successfully!')),
+      );
+    } catch (e) {
+      setState(() {
+        _isProcessingImage = false;
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error processing document: $e')),
+      );
+    }
+  }
+
+  Map<String, String> _parseCBCValues(String text) {
+    final values = <String, String>{};
+    final normalized = text.toUpperCase().replaceAll(RegExp(r'\s+'), ' ');
+    print("Normalized text: $normalized");
+
+    // Look for "OBSERVED VALUE"
+    final observedIndex = normalized.indexOf("OBSERVED VALUE");
+    if (observedIndex == -1) {
+      print("OBSERVED VALUE not found in text");
+      return values;
     }
 
-    setState(() {
-      _isProcessingImage = false;
-    });
+    // Extract substring after "OBSERVED VALUE"
+    final afterObserved = normalized.substring(observedIndex);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Document processed successfully!')),
-    );
+    // Capture numbers (allow decimals and commas)
+    final numberRegex = RegExp(r'(\d+[.,]?\d*)');
+    final matches = numberRegex.allMatches(afterObserved).map((m) => m.group(1)!).toList();
+
+    print("Extracted numbers after OBSERVED VALUE: $matches");
+
+    // Expected parameter order in many CBC reports
+    final orderedParams = [
+      "HGB", "RBC", "HCT", "WBC",
+      "MCV", "MCH", "MCHC", "RDW",
+      "MPV", "PDW", "PCT", "PLT"
+    ];
+
+    for (int i = 0; i < orderedParams.length && i < matches.length; i++) {
+      // Normalize numbers (replace commas with dots)
+      values[orderedParams[i]] = matches[i].replaceAll(',', '.');
+    }
+
+    print("Final extracted CBC values: $values");
+    return values;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -385,7 +440,7 @@ class _CbcAnalyzerPageState extends State<CbcAnalyzerPage> {
   /// Results Table
   Widget _resultsTable() {
     // Build analysis from form values and defined ranges
-    final params = ["WBC","RBC","HGB","PLT","HCT","MCV","MCH","MCHC","RDW","MPV"];
+    final params = ["WBC","RBC","HGB","PLT","HCT","MCV","MCH","MCHC","RDW","MPV","PDW","PCT"];
     final analysisResults = <Map<String, String>>[];
 
     for (final p in params) {
